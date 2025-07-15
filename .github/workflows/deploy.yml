@@ -1,0 +1,34 @@
+name: Deploy VH24 dice game project to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Or 'master', depending on your main branch name
+    paths:
+      - 'Frontend Project/VH24 Dice Game/**' # Only run when changes occur in this specific folder
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact from specific subfolder
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'Frontend Project/VH24 Dice Game' # <--- **CRITICAL: This is your game's subfolder path**
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
